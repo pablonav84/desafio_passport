@@ -101,8 +101,8 @@ passport.use(
     "github",
     new github.Strategy(
         {
-            clientID:"Iv1.d4f09e8b21a0b251",
-            clientScret:"54c4f5e5951a3d3ecfe6b3d8dea1d5fd10e38845",
+            clientID:"completar",
+            clientScret:"completar",
             callBackURL:"http://localhost:8080/api/sessions/callbackGithub"
         },
         async function(accesToken, refreshToken, profile, done){
