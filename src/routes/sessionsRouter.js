@@ -1,15 +1,12 @@
 import { Router } from "express"
-import { UsuariosManager } from "../dao/models/usuariosManagerMongo.js"
 import passport from "passport"
 export const router=Router()
 
-let uManager=new UsuariosManager()
-
 router.get('/github', passport.authenticate("github", {}), (req,res)=>{})
 
-router.get('/callbackGithub', passport.authenticate("github", {}), (req,res)=>{
+router.get('/callbackGithub', passport.authenticate("github", {failureRedirect:"/api/sessions/errorGitHub"}), (req,res)=>{
 
-    // req.user
+    // obtengo un req.user que puedo devolver como dato
 
     req.session.usuario=req.user
     res.setHeader('Content-Type','application/json');
@@ -17,6 +14,16 @@ router.get('/callbackGithub', passport.authenticate("github", {}), (req,res)=>{
         payload:"Login correcto", 
         usuario:req.user
     });
+})
+
+router.get("/errorGitHub", (req, res)=>{
+    res.setHeader('Content-Type','application/json');
+    return res.status(500).json(
+        {
+            error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
+            detalle:`Fallo al autenticar con GitHub`
+        }
+    )
 })
 
 router.get("/errorRegistro", (req, res)=>{
