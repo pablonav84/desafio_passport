@@ -8,7 +8,7 @@ import {router as cartRouter} from "./routes/cartRouter.js"
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
 import mongoose from 'mongoose';
-import { inicializaPassport } from './config/passport.config.js';
+import { inicializaPassport, initPassport } from './config/passport.config.js';
 import passport from 'passport';
 
 const PORT = 8080;
@@ -35,6 +35,10 @@ app.use(session(
 
 //Passport
 inicializaPassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+initPassport()
 app.use(passport.initialize())
 app.use(passport.session())
 

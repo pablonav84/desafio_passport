@@ -105,7 +105,7 @@ passport.use(
             clientScret:"completar",
             callBackURL:"http://localhost:8080/api/sessions/callbackGithub"
         },
-        async function(accesToken, refreshToken, profile, done){
+        async function(accessToken, refreshToken, profile, done){
             try {
             console.log(profile)    
             } catch (error) {

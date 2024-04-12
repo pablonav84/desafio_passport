@@ -5,6 +5,20 @@ export const router=Router()
 
 let uManager=new UsuariosManager()
 
+router.get('/github', passport.authenticate("github", {}), (req,res)=>{})
+
+router.get('/callbackGithub', passport.authenticate("github", {}), (req,res)=>{
+
+    // req.user
+
+    req.session.usuario=req.user
+    res.setHeader('Content-Type','application/json');
+    return res.status(200).json({
+        payload:"Login correcto", 
+        usuario:req.user
+    });
+})
+
 router.get("/errorRegistro", (req, res)=>{
     return res.redirect("/registro?error=Error en el proceso de registro...")
 })
