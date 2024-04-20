@@ -3,6 +3,7 @@ import local from "passport-local"
 import { creaHash, validaPassword } from "../utils.js"
 import { UsuariosManager } from "../dao/models/usuariosManagerMongo.js"
 import github from "passport-github2"
+import { usuariosModelo } from "../dao/models/usuariosModelo.js"
 
 const usuariosManager=new UsuariosManager
 
@@ -97,23 +98,38 @@ try {
 
 export const initPassport=()=>{
 
-passport.use(
-    "github",
-    new github.Strategy(
-        {
-            clientID:"completar",
-            clientScret:"completar",
-            callBackURL:"http://localhost:8080/api/sessions/callbackGithub"
-        },
-        async function(accessToken, refreshToken, profile, done){
-            try {
-            console.log(profile)    
-            } catch (error) {
-                return done(error)
+    passport.use(
+        "github",
+        new github.Strategy(
+            {
+                clientID:"completar",
+                clientSecret:"completar",
+                callbackURL:"http://localhost:8080/api/sessions/callbackGithub",
+            },
+            async function(accessToken, refreshToken, profile, done){
+                try {
+                     let nombre=profile._json.name
+                    let email=profile._json.email
+                    if(!email){
+                        return done(null, false)
+                    }
+                    let usuario= await usuariosModelo.findOne({email})
+                    if(!usuario){
+                        usuario=await usuariosModelo.create({
+                            nombre, email, 
+                            profileGithub: profile
+                        })
+                    }
+
+                    return done(null, usuario)
+                } catch (error) {
+                    return done(error)
+                }
             }
-        }
+        )
     )
-)
+
+    // 1') solo si manejas sesiones
     passport.serializeUser((usuario, done)=>{
         return done(null, usuario._id)
     })
@@ -121,4 +137,5 @@ passport.use(
     passport.deserializeUser((usuario, done)=>{
         return done(null, usuario)
     })
+
 }

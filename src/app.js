@@ -34,11 +34,11 @@ app.use(session(
 ))
 
 //Passport
-inicializaPassport()
+initPassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-initPassport()
+inicializaPassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
