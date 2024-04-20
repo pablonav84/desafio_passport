@@ -24,12 +24,12 @@ try {
 
   // Validación de correo válido
   if (!await usuariosManager.validarEmail(email)) {
-    return done("El formato del correo electrónico no es válido");
+    return done(null, false, {message:"El formato del correo electrónico no es válido"});
   }
 
   // Validación de contraseña
   if (!await usuariosManager.validarPassword(password)) {
-    return done("La contraseña debe contener 8 caracteres como minimo, una mayúscula y un caracter especial")
+    return done(null, false, {message:"La contraseña debe contener 8 caracteres como minimo, una mayúscula y un caracter especial"})
  }
 
   // Usuario admin

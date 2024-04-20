@@ -1,6 +1,8 @@
 import { Router } from "express"
 import { UsuariosManager } from "../dao/models/usuariosManagerMongo.js"
 import passport from "passport"
+import { passportCall } from "../utils.js"
+import { auth2 } from "../middlewares/auth2.js"
 export const router=Router()
 
 let uManager=new UsuariosManager()
@@ -22,8 +24,8 @@ router.get('/callbackGithub', passport.authenticate("github", {}), (req,res)=>{
 router.get("/errorRegistro", (req, res)=>{
     return res.redirect("/registro?error=Error en el proceso de registro...")
 })
-
-router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/errorRegistro"}), async(req,res)=>{
+//router.post('/registro', passport.authenticate("registro", {failureRedirect:"/api/sessions/errorRegistro"}), async(req,res)=>{
+router.post('/registro', passportCall("registro", auth2(["usuario", "admin"]), {failureRedirect:"/api/sessions/errorRegistro"}), async(req,res)=>{
 
     console.log(req.user) // passport, si ejecuta correctamente, deja en la request una propiedad user
     return res.redirect(`/registro?mensaje=Registro exitoso para ${req.user.nombre}`)
